@@ -9,7 +9,8 @@
 <script>
     export default{
         props: {
-            page: { // How we can validate the page, giving the default values if pages isnt loaded yet
+            page: { // How we can validate the page, giving the default values if pages isnt loaded 
+            // ASDP]\yet
                 type: Object,
                 default(rawProps){
                     return {

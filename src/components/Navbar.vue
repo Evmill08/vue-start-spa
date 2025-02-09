@@ -5,13 +5,13 @@
         <div class="container-fluid">
         <a class="navbar-brand" href="#">My Vue</a>
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li v-for="(page, index) in pages" class="nav-item" :key="index"> <!--v-for loops through each link in links, links has to be defined in mounted Vue instance-->
-                    <navbar-link
-                        :page="page"
-                        :isActice = "activePage==index"
-                        @click.prevent="navLinkClick(index)"
-                    ></navbar-link>
-                </li>
+                <navbar-link
+                    v-for="(page, index) in publishedPages" class="nav-item" :key="index"
+                    :page="page"
+                    :index="index"
+                    :isActive = "activePage==index"
+                    @activated="$emit('activated')"
+                ></navbar-link>
             </ul>
             <form class="d-flex">
                 <button 
@@ -31,8 +31,15 @@
         components: {
             NavbarLink
         },
-        props: ['pages', 'activePage', 'navLinkClick'], // Props are read-only
-                
+        created() {
+            this.getThemeSettings();
+        },
+        props: ['pages', 'index', 'activePage'], // Props are read-only
+        computed: {
+            publishedPages() {
+               return this.pages.filter(p => p.published)
+            }
+        },
         data() {
             return {
                 theme: 'dark',
@@ -47,6 +54,17 @@
                 }
 
                 this.theme = theme;
+                this.storeThemeSettings();
+            },
+            storeThemeSettings() {
+                localStorage.setItem('theme', this.theme);
+            }, 
+            getThemeSettings() {
+                let theme = localStorage.getItem('theme', this.theme);
+
+                if (theme) {
+                    this.theme = theme;
+                }
             }
         }
     }

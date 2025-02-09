@@ -2,27 +2,37 @@
     <navbar 
         :pages="pages"
         :active-page="activePage"
-        :nav-link-click="(index) => activePage = index">
-    </navbar>
+    ></navbar>
 
     <page-viewer 
         v-if="pages.length > 0"
         :page="pages[activePage]">
     </page-viewer>
+
+    <create-page
+        @page-created="pageCreated"
+    ></create-page>
+
 </template>
 
 <script>
     import PageViewer from './components/PageViewer.vue';
     import Navbar from './components/Navbar.vue';
+    import CreatePage from './components/CreatePage.vue';
 
 
     export default{
         components: {
             PageViewer,
-            Navbar
+            Navbar,
+            CreatePage
         },
         created() {
             this.getPages();
+
+            this.$bus.$on('navbarLinkActivated', (index) => {
+                this.activePage = index;
+            });
         },
         data() { // This is the data want to use in the div id'd with content
             return {
@@ -36,6 +46,9 @@
                 let data = await res.json();
 
                 this.pages = data;
+            },
+            pageCreated(pageObj) {
+                this.pages.push(pageObj);
             }
         }
     }

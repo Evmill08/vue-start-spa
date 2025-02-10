@@ -9,9 +9,17 @@
                     v-for="(page, index) in publishedPages" class="nav-item" :key="index"
                     :page="page"
                     :index="index"
-                    :isActive = "activePage==index"
-                    @activated="$emit('activated')"
+
                 ></navbar-link>
+
+                <li>
+                    <router-link
+                        to="/create"
+                        class="nav-link"
+                        active-class="active"
+                        aria-current="page"
+                    >Create Page</router-link>
+                </li>
             </ul>
             <form class="d-flex">
                 <button 
@@ -33,8 +41,9 @@
         },
         created() {
             this.getThemeSettings();
+            this.pages = this.$pages.getAllPages();
         },
-        props: ['pages', 'index', 'activePage'], // Props are read-only
+        props: ['pages'], // Props are read-only
         computed: {
             publishedPages() {
                return this.pages.filter(p => p.published)
@@ -43,6 +52,7 @@
         data() {
             return {
                 theme: 'dark',
+                data: []
             }
         }, 
         methods:{

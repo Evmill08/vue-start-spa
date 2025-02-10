@@ -1,6 +1,6 @@
 <template>
-    <div class="container">
-        <h1 class="emphasize">{{page.pageTitle}}</h1> <!--These are essentially placeholders for what Vue instance returns-->
+    <div v-if="page" class="container">
+        <h1 class="emphasize">{{ page.pageTitle }}</h1> <!--These are essentially placeholders for what Vue instance returns-->
         <p>{{page.content}}</p>
     </div>
 
@@ -8,18 +8,26 @@
 
 <script>
     export default{
-        props: {
-            page: { // How we can validate the page, giving the default values if pages isnt loaded 
-            // ASDP]\yet
-                type: Object,
-                default(rawProps){
-                    return {
-                        pageTitle: "",
-                        content: ""
-                    };
-                }
+        props: ['index'],
+        created() {
+            this.page = this.$pages.getSinglePage(this.index);
+            
+            // this.$watch(() => this.$route.params, (newParams, previousParams) => {
+            //     this.page = this.$pages.getSinglePage(newParams);
+            // });
+        },
+
+        data() {
+            return {
+                page: null
             }
-        }  
+        },
+        watch: {
+            index(newIndex, oldIndex){
+                this.page = this.$pages.getSinglePage(this.index);
+            }
+        }
+        
     }
 </script>
 
